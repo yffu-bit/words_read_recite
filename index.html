@@ -7,18 +7,12 @@
 <script src="https://cdn.jsdelivr.net/npm/hanzi-writer@3.5.0/dist/hanzi-writer.min.js"></script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
   body {
-    font-family: "PingFang TC", "Microsoft JhengHei", "Heiti TC", "Noto Sans TC", "Helvetica Neue", sans-serif;
+    font-family: "PingFang HK", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
     background: linear-gradient(165deg, #eef4fd 0%, #fdf6f0 100%);
-    min-height: 100vh;
-    color: #2c3e50;
-    padding: 18px 14px 60px;
-    line-height: 1.6;
+    min-height: 100vh; color: #2c3e50; padding: 18px 14px 60px; line-height: 1.6;
   }
-
   #app { max-width: 780px; margin: 0 auto; }
-
   .app-header { text-align: center; margin-bottom: 20px; }
   .app-header h1 { font-size: 26px; letter-spacing: 3px; font-weight: 700; color: #2f4f7f; }
   .app-sub { font-size: 13px; color: #8fa0b8; letter-spacing: 2px; }
@@ -27,11 +21,8 @@
   .screen.active { display: block; animation: fadeUp .3s ease; }
   @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 
-  .card {
-    background: #fff; border-radius: 20px; padding: 22px;
-    box-shadow: 0 6px 24px rgba(80, 105, 150, .10); margin-bottom: 16px;
-  }
-
+  .card { background: #fff; border-radius: 20px; padding: 22px;
+    box-shadow: 0 6px 24px rgba(80, 105, 150, .10); margin-bottom: 16px; }
   h2 { font-size: 19px; margin-bottom: 10px; color: #2f4f7f; }
   .muted { color: #8fa0b8; font-size: 14px; }
   .center { text-align: center; }
@@ -44,6 +35,13 @@
   }
   textarea:focus { border-color: #5B8DEF; }
 
+  input[type="text"] {
+    width: 100%; border: 2px solid #e2e9f4; border-radius: 12px; padding: 10px 14px;
+    font-size: 15px; font-family: inherit; outline: none; background: #fbfdff;
+    color: #2f4f7f; margin-bottom: 8px;
+  }
+  input[type="text"]:focus { border-color: #5B8DEF; }
+
   .chips { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px; }
   .chip {
     background: #eef4fd; color: #4a6fa5; border-radius: 999px;
@@ -55,7 +53,7 @@
   button:active { transform: scale(.97); }
   button:disabled { opacity: .55; cursor: not-allowed; }
 
-  .btn-primary, .btn-accent, .btn-ghost {
+  .btn-primary, .btn-accent, .btn-ghost, .btn-danger {
     font-size: 16px; padding: 12px 22px; border-radius: 14px; font-weight: 500;
   }
   .btn-primary { background: #5B8DEF; color: #fff; box-shadow: 0 4px 0 #3d6fc4; }
@@ -70,8 +68,12 @@
   .btn-ghost:hover:not(:disabled) { background: #f3f8ff; border-color: #b9cfeb; }
   .btn-ghost.small { font-size: 13px; padding: 10px 16px; }
 
+  .btn-danger { background: #fff; color: #d6453a; border: 2px solid #f4c7c4; font-size: 13px; padding: 8px 14px; }
+  .btn-danger:hover { background: #fff0ef; }
+
   .btn-lg { font-size: 18px; padding: 15px 30px; border-radius: 16px; }
   .btn-block { width: 100%; display: block; margin-top: 6px; }
+  .btn-sm { font-size: 13px; padding: 8px 14px; border-radius: 10px; }
 
   .progress-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; padding: 0 4px; }
   .badge { background: #5B8DEF; color: #fff; padding: 5px 14px; border-radius: 999px; font-size: 14px; letter-spacing: 1px; }
@@ -82,36 +84,39 @@
 
   .word-display { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin: 16px 0 6px; }
   .word-display .char {
-    width: 88px; height: 88px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 54px; font-weight: 600;
-    background: #f7faff; border: 2px solid #dfe9f8; border-radius: 16px;
-    cursor: pointer; user-select: none; color: #2f4f7f; transition: all .18s;
+    width: 88px; height: 88px; display: flex; align-items: center; justify-content: center;
+    font-size: 54px; font-weight: 600; background: #f7faff; border: 2px solid #dfe9f8;
+    border-radius: 16px; cursor: pointer; user-select: none; color: #2f4f7f; transition: all .18s;
   }
-  .word-display .char:hover {
-    background: #eaf2ff; border-color: #8fb6f5; transform: translateY(-3px);
-    box-shadow: 0 6px 14px rgba(91,141,239,.18);
-  }
+  .word-display .char:hover { background: #eaf2ff; border-color: #8fb6f5; transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(91,141,239,.18); }
   .word-display .char.playing { animation: charPulse .5s ease; background: #fff1e3; border-color: #FF8C42; }
   @keyframes charPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 
-  .feedback {
-    min-height: 32px; text-align: center; font-size: 17px; font-weight: 600;
-    margin: 12px 0 0; padding: 8px; border-radius: 12px; transition: all .2s;
-  }
+  .feedback { min-height: 32px; text-align: center; font-size: 17px; font-weight: 600;
+    margin: 12px 0 0; padding: 8px; border-radius: 12px; transition: all .2s; }
   .feedback.success { background: #e6f9ee; color: #1e9c58; }
   .feedback.error { background: #fff0ef; color: #d6453a; }
+  .feedback.hint { background: #fff8e8; color: #96703a; }
   .heard { text-align: center; font-size: 13px; color: #9fb0c6; min-height: 18px; margin-top: 4px; }
+
+  .ready-banner {
+    display: none; text-align: center; font-size: 20px; font-weight: 700;
+    padding: 14px; border-radius: 14px; margin: 10px 0;
+    background: #fff1e3; color: #d96f2b; letter-spacing: 2px;
+    animation: readyPulse 0.6s ease infinite;
+  }
+  .ready-banner.show { display: block; }
+  .ready-banner.listening { background: #e6f9ee; color: #1e9c58; animation: none; }
+  @keyframes readyPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.03); } }
 
   .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
   .nav-row { display: flex; gap: 10px; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 
   .quiz-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; margin-bottom: 6px; }
   .quiz-grid { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin: 18px 0; }
-  .quiz-box {
-    background: #fbfdff; border: 2px dashed #cfdcf0; border-radius: 16px;
-    padding: 8px; display: flex; flex-direction: column; align-items: center;
-  }
+  .quiz-box { background: #fbfdff; border: 2px dashed #cfdcf0; border-radius: 16px;
+    padding: 8px; display: flex; flex-direction: column; align-items: center; }
   .quiz-canvas {
     background-image: linear-gradient(to right, #eef3fa 1px, transparent 1px),
                       linear-gradient(to bottom, #eef3fa 1px, transparent 1px);
@@ -135,10 +140,8 @@
   .note p { margin: 0; }
 
   .summary { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 18px 0 22px; }
-  .stat {
-    background: #f5f9ff; border-radius: 16px; padding: 14px 20px; text-align: center;
-    min-width: 90px; border: 1px solid #e4edfa;
-  }
+  .stat { background: #f5f9ff; border-radius: 16px; padding: 14px 20px; text-align: center;
+    min-width: 90px; border: 1px solid #e4edfa; }
   .stat-num { font-size: 24px; font-weight: 700; color: #3d6fc4; }
   .stat-label { font-size: 12px; color: #8fa0b8; margin-top: 2px; }
   .stat.big { background: linear-gradient(135deg,#5B8DEF,#7fb0ff); border: none; }
@@ -156,12 +159,40 @@
   .skip { color: #b0bccd; font-size: 14px; }
 
   .praise { text-align: center; font-size: 16px; color: #96703a; background: #fffbf2;
-            border: 1px solid #ffe6bf; border-radius: 14px; padding: 12px; margin-bottom: 16px; }
+    border: 1px solid #ffe6bf; border-radius: 14px; padding: 12px; margin-bottom: 16px; }
 
-  .env-warn {
-    background: #fff8e8; border: 1px solid #ffe0a3; color: #96703a;
-    border-radius: 14px; padding: 12px 16px; font-size: 14px; margin-bottom: 14px;
+  .env-warn { background: #fff8e8; border: 1px solid #ffe0a3; color: #96703a;
+    border-radius: 14px; padding: 12px 16px; font-size: 14px; margin-bottom: 14px; }
+
+  .preset-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+  .preset-item {
+    display: flex; gap: 8px; align-items: center;
+    background: #f7faff; border: 1px solid #e4edfa; border-radius: 12px; padding: 10px 12px;
   }
+  .preset-info { flex: 1; min-width: 0; }
+  .preset-name { font-weight: 600; color: #2f4f7f; font-size: 15px; }
+  .preset-words { font-size: 13px; color: #8fa0b8; overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap; margin-top: 2px; }
+  .preset-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+  .share-box {
+    background: #f5f9ff; border: 1px dashed #b9cfeb; border-radius: 12px;
+    padding: 12px; margin-top: 10px; font-size: 13px; color: #4a6fa5;
+    word-break: break-all; display: none;
+  }
+  .share-box.show { display: block; }
+  .share-box textarea {
+    width: 100%; font-size: 12px; padding: 8px; border-radius: 8px;
+    border: 1px solid #dbe5f3; background: #fff; margin: 6px 0 0; line-height: 1.5;
+    font-family: monospace; resize: none;
+  }
+
+  .tabs { display: flex; gap: 6px; margin-bottom: 14px; border-bottom: 2px solid #eef3fa; }
+  .tab {
+    padding: 8px 14px; font-size: 14px; color: #8fa0b8; background: transparent;
+    border: none; border-bottom: 3px solid transparent; margin-bottom: -2px; font-weight: 500;
+  }
+  .tab.active { color: #5B8DEF; border-bottom-color: #5B8DEF; }
 
   @media (max-width: 520px) {
     .word-display .char { width: 68px; height: 68px; font-size: 40px; border-radius: 14px; }
@@ -180,28 +211,59 @@
     <p class="app-sub">讀得準 · 默得對 · 寫得好</p>
   </div>
 
-  <!-- ============ 設定畫面 ============ -->
   <section id="screen-setup" class="screen active">
     <div id="envWarnBox"></div>
     <div class="card">
-      <h2>👩‍🏫 老師輸入詞語</h2>
-      <p class="muted">每行一個詞語，也可用逗號、空格分隔（最多 10 個）。</p>
-      <textarea id="wordInput" rows="5" placeholder="學習&#10;朋友&#10;天空"></textarea>
-      <div class="chips">
-        <span class="muted">快速範例：</span>
-        <button class="chip" data-words="學習,朋友,天空">學習 朋友 天空</button>
-        <button class="chip" data-words="學校,老師,同學">學校 老師 同學</button>
-        <button class="chip" data-words="春天,花朵,蝴蝶">春天 花朵 蝴蝶</button>
+      <h2>👩‍🏫 老師指定詞語</h2>
+      <div class="tabs">
+        <button class="tab active" data-tab="input">✏️ 輸入詞語</button>
+        <button class="tab" data-tab="presets">📚 我的詞庫</button>
       </div>
-      <div id="setupError" class="feedback error" style="display:none"></div>
-      <button id="btnStart" class="btn-primary btn-lg btn-block">開始練習 →</button>
+
+      <div id="tab-input">
+        <p class="muted">每行一個詞語，也可用逗號、空格分隔（最多 10 個）。</p>
+        <textarea id="wordInput" rows="5" placeholder="學習&#10;朋友&#10;天空"></textarea>
+        <div class="chips">
+          <span class="muted">快速範例：</span>
+          <button class="chip" data-words="學習,朋友,天空">學習 朋友 天空</button>
+          <button class="chip" data-words="學校,老師,同學">學校 老師 同學</button>
+          <button class="chip" data-words="春天,花朵,蝴蝶">春天 花朵 蝴蝶</button>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;">
+          <input type="text" id="presetName" placeholder="詞庫名稱（例：第一課）" style="flex:1;min-width:140px;margin:0;">
+          <button id="btnSavePreset" class="btn-ghost btn-sm">💾 儲存為詞庫</button>
+        </div>
+        <div id="setupError" class="feedback error" style="display:none"></div>
+        <button id="btnStart" class="btn-primary btn-lg btn-block">開始練習 →</button>
+        <div class="btn-row" style="margin-top:10px;">
+          <button id="btnShare" class="btn-ghost small">🔗 生成分享連結</button>
+          <button id="btnShowQR" class="btn-ghost small">📱 顯示 QR Code</button>
+        </div>
+        <div id="shareBox" class="share-box">
+          <div>把下面連結傳給學生：</div>
+          <textarea id="shareLink" rows="3" readonly></textarea>
+          <div class="btn-row" style="justify-content:flex-start;margin-top:8px;">
+            <button id="btnCopyLink" class="btn-primary btn-sm">📋 複製連結</button>
+          </div>
+        </div>
+        <div id="qrBox" class="share-box center">
+          <div style="margin-bottom:8px;">學生用手機掃描：</div>
+          <div id="qrCanvas" style="display:inline-block;background:#fff;padding:8px;border-radius:8px;"></div>
+        </div>
+      </div>
+
+      <div id="tab-presets" style="display:none;">
+        <p class="muted">已儲存的詞庫：</p>
+        <div id="presetList" class="preset-list"></div>
+        <div id="noPreset" class="muted center" style="padding:20px 0;">尚無詞庫。</div>
+      </div>
     </div>
+
     <div class="card note">
-      <p>💡 建議使用 Chrome 瀏覽器，並允許麥克風權限，以獲得最佳的語音辨識效果。</p>
+      <p>💡 老師可在自己的手機輸入詞語 → 生成連結 → 傳給學生 → 學生一打開即可練習。</p>
     </div>
   </section>
 
-  <!-- ============ 第一關：讀 ============ -->
   <section id="screen-read" class="screen">
     <div class="progress-head">
       <span class="badge">第一關：讀</span>
@@ -212,12 +274,11 @@
     <div class="card">
       <div id="readWordDisplay" class="word-display"></div>
       <p class="muted center">👆 點按生字可聽讀音</p>
-
+      <div id="readyBanner" class="ready-banner"></div>
       <div class="btn-row">
         <button id="btnReadRecord" class="btn-primary btn-lg">🎤 按鍵錄音</button>
         <button id="btnReadPlay" class="btn-ghost">🔊 播放詞語</button>
       </div>
-
       <div id="readFeedback" class="feedback"></div>
       <div id="readHeard" class="heard"></div>
     </div>
@@ -234,14 +295,12 @@
     </div>
   </section>
 
-  <!-- ============ 第二關：默 ============ -->
   <section id="screen-write" class="screen">
     <div class="progress-head">
       <span class="badge accent">第二關：默</span>
       <span id="writeCount" class="muted">詞語 0 / 0</span>
     </div>
 
-    <!-- 學習階段 -->
     <div id="learnPhase">
       <div class="card">
         <h2 class="center">先聽一聽、看一看</h2>
@@ -255,7 +314,6 @@
       <button id="btnChallenge" class="btn-accent btn-lg btn-block">📝 默寫挑戰</button>
     </div>
 
-    <!-- 默寫階段 -->
     <div id="quizPhase" style="display:none">
       <div class="card">
         <div class="quiz-head">
@@ -269,7 +327,6 @@
     </div>
   </section>
 
-  <!-- ============ 成績總結 ============ -->
   <section id="screen-report" class="screen">
     <div class="card">
       <h2 class="center">📊 成績總結</h2>
@@ -301,46 +358,68 @@ function showScreen(id) {
   document.getElementById(id).classList.add('active');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, c => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   }[c]));
 }
-
 function setFeedback(sel, type, msg) {
   const el = $(sel);
   el.className = 'feedback' + (type ? ' ' + type : '');
   el.innerHTML = msg || '';
 }
-
 function parseWords(text) {
-  return text
-    .split(/[\n,，、;；\s]+/)
-    .map(s => s.trim())
-    .filter(Boolean)
-    .slice(0, 10);
+  return text.split(/[\n,，、;；\s]+/).map(s => s.trim()).filter(Boolean).slice(0, 10);
+}
+
+async function playBeep(freq, duration, volume) {
+  try {
+    if (!window._audioCtx) {
+      window._audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    const ctx = window._audioCtx;
+    if (ctx.state === 'suspended') { try { await ctx.resume(); } catch (e) {} }
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = freq || 800;
+    gain.gain.value = volume || 0.1;
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start();
+    setTimeout(() => { try { osc.stop(); } catch (e) {} }, (duration || 0.1) * 1000);
+  } catch (e) {}
 }
 
 /* =========================================================
-   全域狀態
+   URL / localStorage
    ========================================================= */
-const state = {
-  words: [],
-  read:  { index: 0, correct: [], skipped: [] },
-  write: { index: 0, done: [], attempts: [], mistakes: [] }
-};
+const LS_LAST = 'zh_practice_last_words';
+const LS_PRESETS = 'zh_practice_presets';
 
-function resetProgress() {
-  const n = state.words.length;
-  state.read  = { index: 0, correct: new Array(n).fill(false), skipped: new Array(n).fill(false) };
-  state.write = { index: 0, done: new Array(n).fill(false), attempts: new Array(n).fill(0), mistakes: new Array(n).fill(0) };
+function getWordsFromURL() {
+  const p = new URLSearchParams(location.search);
+  const raw = p.get('words') || p.get('w');
+  if (!raw) return null;
+  const words = raw.split(/[,，、|;；\s]+/).map(s => s.trim()).filter(Boolean).slice(0, 10);
+  return words.length ? words : null;
 }
+function saveLastWords(words) { try { localStorage.setItem(LS_LAST, JSON.stringify(words)); } catch (e) {} }
+function loadLastWords() {
+  try { const s = localStorage.getItem(LS_LAST); return s ? JSON.parse(s) : null; } catch (e) { return null; }
+}
+function loadPresets() {
+  try { const s = localStorage.getItem(LS_PRESETS); return s ? JSON.parse(s) : []; } catch (e) { return []; }
+}
+function savePresets(list) { try { localStorage.setItem(LS_PRESETS, JSON.stringify(list)); } catch (e) {} }
 
 /* =========================================================
-   語音合成（TTS）
+   ★ 核心修正：語音合成（粵語 zh-HK）
    ========================================================= */
 let voices = [];
+let _ttsWarmedUp = false;
+const _uttRefs = [];   // 保留 utterance 引用，防 GC
+
 function refreshVoices() {
   if (!('speechSynthesis' in window)) return;
   const v = speechSynthesis.getVoices();
@@ -353,34 +432,80 @@ if ('speechSynthesis' in window) {
   setTimeout(refreshVoices, 1200);
 }
 
-function pickZhVoice() {
-  const isZh = v => /^(zh|cmn)/i.test(v.lang || '');
-  return voices.find(v => isZh(v) && /HK/i.test(v.lang))
-      || voices.find(v => isZh(v))
+function pickCantoneseVoice() {
+  const isCantonese = v =>
+    /zh[-_]HK|yue|Hant[-_]HK/i.test(v.lang || '') ||
+    /粵語|廣東話|Cantonese/i.test(v.name || '');
+  return voices.find(v => isCantonese(v))
+      || voices.find(v => /^zh/i.test(v.lang || ''))
       || null;
 }
 
+/* ★ 暖機：在第一次使用者手勢時，朗讀一個極短字串 */
+function warmUpTTS() {
+  if (_ttsWarmedUp || !('speechSynthesis' in window)) return;
+  try {
+    const u = new SpeechSynthesisUtterance('。');
+    u.lang = 'zh-HK';
+    u.volume = 0.01;
+    u.rate = 2;
+    _uttRefs.push(u);
+    if (_uttRefs.length > 8) _uttRefs.shift();
+    speechSynthesis.speak(u);
+    _ttsWarmedUp = true;
+  } catch (e) {}
+}
+
+/* ★ 穩健版 speak：4 個修正 */
 function speak(text, rate) {
   return new Promise(resolve => {
     if (!('speechSynthesis' in window)) { resolve(); return; }
+
+    // ① 先取消（避免兩段疊播）
     try { speechSynthesis.cancel(); } catch (e) {}
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'zh-HK';
-    u.rate = rate || 0.8;
-    u.pitch = 1.05;
-    const v = pickZhVoice();
-    if (v) u.voice = v;
-    let done = false;
-    const finish = () => { if (!done) { done = true; resolve(); } };
-    u.onend = finish;
-    u.onerror = finish;
-    try { speechSynthesis.speak(u); } catch (e) { finish(); }
-    setTimeout(finish, 4000);
+
+    // ② 關鍵：用 setTimeout 分離 cancel 與 speak
+    //    讓引擎有時間完成 cancel，否則會吃掉第一個字
+    setTimeout(() => {
+      // ③ 前導空白：避免某些引擎對漢字開頭敏感
+      const safeText = '　' + text;   // 全形空白，不影響讀音
+
+      const u = new SpeechSynthesisUtterance(safeText);
+      u.lang = 'zh-HK';
+      // ④ 降低語速：0.7 比 0.8 更不容易吃字
+      u.rate = rate || 0.7;
+      u.pitch = 1.0;
+      u.volume = 1.0;
+
+      const v = pickCantoneseVoice();
+      if (v) u.voice = v;
+
+      // ⑤ 保留引用，防垃圾回收
+      _uttRefs.push(u);
+      if (_uttRefs.length > 8) _uttRefs.shift();
+
+      let done = false;
+      const finish = () => { if (!done) { done = true; resolve(); } };
+
+      u.onend = finish;
+      u.onerror = finish;
+
+      try {
+        speechSynthesis.speak(u);
+      } catch (e) {
+        finish();
+        return;
+      }
+
+      // 逾時保護
+      const estimated = Math.max(2500, text.length * 800);
+      setTimeout(finish, estimated);
+    }, 90);   // ★ 90ms 是關鍵
   });
 }
 
 /* =========================================================
-   語音辨識（STT）
+   語音辨識（粵語 zh-HK）
    ========================================================= */
 const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
 
@@ -396,32 +521,42 @@ function recognizeOnce(timeoutMs) {
     catch (e) { finish({ ok: false, reason: 'unsupported' }); return; }
 
     rec.lang = 'zh-HK';
-    rec.interimResults = false;
+    rec.interimResults = true;
     rec.maxAlternatives = 5;
     rec.continuous = false;
 
+    let finalAlts = null;
+
     rec.onresult = e => {
-      const res = e.results[0];
-      const alts = [];
-      for (let i = 0; i < res.length; i++) alts.push(res[i].transcript);
-      finish({ ok: true, alternatives: alts });
+      for (let i = 0; i < e.results.length; i++) {
+        const r = e.results[i];
+        if (r.isFinal) {
+          const alts = [];
+          for (let j = 0; j < r.length; j++) alts.push(r[j].transcript);
+          finalAlts = alts;
+        }
+      }
     };
+
     rec.onerror = e => finish({ ok: false, reason: e.error || 'error' });
-    rec.onend   = () => finish({ ok: false, reason: 'no-speech' });
+    rec.onend = () => {
+      if (finalAlts && finalAlts.length) finish({ ok: true, alternatives: finalAlts });
+      else finish({ ok: false, reason: 'no-speech' });
+    };
 
     try { rec.start(); }
     catch (e) { finish({ ok: false, reason: 'error' }); return; }
 
     setTimeout(() => {
       try { rec.stop(); } catch (e) {}
-      finish({ ok: false, reason: 'timeout' });
-    }, timeoutMs || 8000);
+      setTimeout(() => {
+        if (finalAlts && finalAlts.length) finish({ ok: true, alternatives: finalAlts });
+        else finish({ ok: false, reason: 'timeout' });
+      }, 400);
+    }, timeoutMs || 9000);
   });
 }
 
-/* =========================================================
-   ★ 新增：主動確認麥克風權限
-   ========================================================= */
 async function ensureMicPermission() {
   if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
     return { ok: false, reason: 'unsupported' };
@@ -431,19 +566,14 @@ async function ensureMicPermission() {
     stream.getTracks().forEach(t => t.stop());
     return { ok: true };
   } catch (e) {
-    if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError' || e.name === 'SecurityError') {
+    if (e.name === 'NotAllowedError' || e.name === 'PermissionDeniedError' || e.name === 'SecurityError')
       return { ok: false, reason: 'denied' };
-    }
-    if (e.name === 'NotFoundError' || e.name === 'DevicesNotFoundError') {
+    if (e.name === 'NotFoundError' || e.name === 'DevicesNotFoundError')
       return { ok: false, reason: 'no-device' };
-    }
     return { ok: false, reason: 'error' };
   }
 }
 
-/* =========================================================
-   ★ 新增：麥克風不可用時的手動自評
-   ========================================================= */
 function showManualFallback(message) {
   setFeedback('#readFeedback', 'error', message);
   const box = $('#readHeard');
@@ -451,7 +581,7 @@ function showManualFallback(message) {
 
   const tip = document.createElement('div');
   tip.style.cssText = 'margin-top:10px;padding:10px;background:#fff8e8;border-radius:10px;font-size:14px;color:#96703a;text-align:center;';
-  tip.innerHTML = '🎙️ 麥克風無法使用，改為<b>手動自評</b>：讀完後由學生或老師判斷。';
+  tip.innerHTML = '🎙️ 麥克風無法使用，改為<b>手動自評</b>。';
   box.appendChild(tip);
 
   const actions = document.createElement('div');
@@ -469,14 +599,10 @@ function showManualFallback(message) {
     updateReadProgressUI();
     updateReadDoneBox();
   };
-
   const no = document.createElement('button');
   no.className = 'btn-ghost';
   no.textContent = '🔁 再讀一次';
-  no.onclick = () => {
-    $('#readHeard').innerHTML = '';
-    setFeedback('#readFeedback', '', '');
-  };
+  no.onclick = () => { $('#readHeard').innerHTML = ''; setFeedback('#readFeedback', '', ''); };
 
   actions.appendChild(yes);
   actions.appendChild(no);
@@ -487,9 +613,8 @@ function showManualFallback(message) {
    文字比對
    ========================================================= */
 function normalizeText(s) {
-  return (s || '').replace(/[\s,，。.、！!？?；;：:「」『』（）()\[\]【】~～\-—_]/g, '');
+  return (s || '').replace(/[\s,，。.、！!？?；;：:「」『』（）()\[\]【】~～\-—_　]/g, '');
 }
-
 function matchText(heard, target) {
   const h = normalizeText(heard);
   const t = normalizeText(target);
@@ -500,27 +625,34 @@ function matchText(heard, target) {
 }
 
 /* =========================================================
-   HanziWriter 字型資料載入
+   HanziWriter
    ========================================================= */
 function loadCharData(char, onComplete, onError) {
   const url = `https://cdn.jsdelivr.net/npm/hanzi-writer-data@2.0.1/${encodeURIComponent(char)}.json`;
   fetch(url)
-    .then(r => {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(data => onComplete(data))
-    .catch(err => {
-      console.warn('筆順資料載入失敗：', char, err);
-      if (typeof onError === 'function') onError(err);
-    });
+    .catch(err => { console.warn('筆順載入失敗：', char, err); if (onError) onError(err); });
 }
-
 function getCanvasSize() {
   const w = Math.min(window.innerWidth, 780);
   if (w < 420) return 118;
   if (w < 560) return 140;
   return 172;
+}
+
+/* =========================================================
+   全域狀態
+   ========================================================= */
+const state = {
+  words: [],
+  read:  { index: 0, correct: [], skipped: [] },
+  write: { index: 0, done: [], attempts: [], mistakes: [] }
+};
+function resetProgress() {
+  const n = state.words.length;
+  state.read  = { index: 0, correct: new Array(n).fill(false), skipped: new Array(n).fill(false) };
+  state.write = { index: 0, done: new Array(n).fill(false), attempts: new Array(n).fill(0), mistakes: new Array(n).fill(0) };
 }
 
 /* =========================================================
@@ -537,25 +669,21 @@ function renderRead() {
     el.className = 'char';
     el.textContent = ch;
     el.addEventListener('click', () => {
-      el.classList.remove('playing');
-      void el.offsetWidth;
-      el.classList.add('playing');
-      speak(ch, 0.7);
+      warmUpTTS();
+      el.classList.remove('playing'); void el.offsetWidth; el.classList.add('playing');
+      speak(ch, 0.6);
     });
     disp.appendChild(el);
   });
 
   setFeedback('#readFeedback', '', '');
   $('#readHeard').innerHTML = '';
+  hideReadyBanner();
 
   const btn = $('#btnReadRecord');
   btn.disabled = false;
   btn.textContent = state.read.correct[i] ? '🎤 再錄一次' : '🎤 按鍵錄音';
-
-  if (state.read.correct[i]) {
-    setFeedback('#readFeedback', 'success', '✅ 讀音準確！');
-  }
-
+  if (state.read.correct[i]) setFeedback('#readFeedback', 'success', '✅ 讀音準確！');
   updateReadProgressUI();
 }
 
@@ -565,62 +693,69 @@ function updateReadProgressUI() {
   $('#readCount').textContent = `已完成 ${done} / ${state.words.length}`;
   $('#readBar').style.width = (done / total * 100) + '%';
 }
-
 function updateReadDoneBox() {
   const all = state.words.every((_, i) => state.read.correct[i] || state.read.skipped[i]);
   $('#readDoneBox').style.display = all ? 'block' : 'none';
 }
 
-/* =========================================================
-   ★ 改寫：doReadRecording（先要權限，失敗轉手動自評）
-   ========================================================= */
+function showReadyBanner(text, isListening) {
+  const el = $('#readyBanner');
+  el.textContent = text;
+  el.className = 'ready-banner show' + (isListening ? ' listening' : '');
+}
+function hideReadyBanner() {
+  const el = $('#readyBanner');
+  el.className = 'ready-banner';
+  el.textContent = '';
+}
+
 async function doReadRecording() {
   const i = state.read.index;
   const word = state.words[i];
   const btn = $('#btnReadRecord');
 
-  if (!SR) {
-    showManualFallback('⚠️ 此瀏覽器不支援語音辨識，請改用 Chrome，或使用下方的「手動自評」。');
-    return;
-  }
+  if (!SR) { showManualFallback('⚠️ 此瀏覽器不支援語音辨識，請改用 Chrome。'); return; }
 
   btn.disabled = true;
-  btn.textContent = '🔴 檢查麥克風…';
+  btn.textContent = '🎤 檢查麥克風…';
   setFeedback('#readFeedback', '', '');
   $('#readHeard').innerHTML = '';
 
-  // ① 先主動要求麥克風權限
   const perm = await ensureMicPermission();
   if (!perm.ok) {
     btn.disabled = false;
     btn.textContent = '🎤 再錄一次';
-
     let msg = '😕 麥克風無法啟動。';
     if (perm.reason === 'denied') {
-      msg = '🚫 麥克風權限被拒絕。<br>可能原因：<br>① 網頁在 iframe 內（需 allow="microphone"）<br>② 使用 http:// 而非 https://<br>③ 瀏覽器已封鎖此網站。';
-    } else if (perm.reason === 'no-device') {
-      msg = '🎙️ 找不到麥克風裝置，請確認手機／電腦有麥克風。';
-    } else if (perm.reason === 'unsupported') {
-      msg = '⚠️ 此環境不支援麥克風（需 HTTPS 或 localhost）。';
-    }
+      msg = '🚫 麥克風權限被拒絕。<br>可能原因：<br>① 網頁在 iframe 內（需 allow="microphone"）<br>② 使用 http:// 而非 https://<br>③ 瀏覽器已封鎖。';
+    } else if (perm.reason === 'no-device') msg = '🎙️ 找不到麥克風裝置。';
+    else if (perm.reason === 'unsupported') msg = '⚠️ 此環境不支援麥克風（需 HTTPS）。';
     showManualFallback(msg);
     return;
   }
 
-  // ② 權限 OK，正式開始辨識
-  btn.textContent = '🔴 錄音中…請朗讀';
-  const res = await recognizeOnce(8000);
+  btn.textContent = '🎤 準備…';
+  showReadyBanner('準備…', false);
+  await playBeep(660, 0.08, 0.08);
+  await sleep(280);
+  showReadyBanner('🔴 請開始朗讀！', true);
+  await playBeep(1040, 0.12, 0.12);
+  await sleep(160);
 
+  btn.textContent = '🔴 錄音中…請朗讀';
+  const res = await recognizeOnce(9000);
+
+  hideReadyBanner();
   btn.disabled = false;
   btn.textContent = '🎤 再錄一次';
 
   if (!res.ok) {
     const map = {
-      'no-speech':   '😕 沒有聽到聲音，請靠近麥克風再試一次。',
+      'no-speech': '😕 沒有聽到聲音，請靠近麥克風再試一次。',
       'not-allowed': '🚫 權限被拒絕，請允許麥克風後再試。',
       'service-not-allowed': '🚫 語音辨識服務無法使用。',
       'audio-capture': '🎙️ 找不到麥克風裝置。',
-      'timeout':     '⏱️ 等不到聲音，請再試一次。',
+      'timeout': '⏱️ 等不到聲音，請再試一次。',
       'unsupported': '⚠️ 此瀏覽器不支援語音辨識。'
     };
     setFeedback('#readFeedback', 'error', map[res.reason] || '😕 辨識失敗，請再試一次。');
@@ -629,7 +764,6 @@ async function doReadRecording() {
 
   const alts = res.alternatives || [];
   $('#readHeard').textContent = alts[0] ? ('系統聽到：' + alts[0]) : '';
-
   const ok = alts.some(t => matchText(t, word));
 
   if (ok) {
@@ -638,6 +772,23 @@ async function doReadRecording() {
     setFeedback('#readFeedback', 'success', '✅ 讀音準確！');
     updateReadProgressUI();
     updateReadDoneBox();
+    return;
+  }
+
+  const targetNorm = normalizeText(word);
+  const targetChars = [...targetNorm];
+  let best = { matched: 0, heardNorm: '' };
+  for (const alt of alts) {
+    const heardNorm = normalizeText(alt);
+    if (!heardNorm) continue;
+    const matched = targetChars.filter(c => heardNorm.includes(c)).length;
+    if (matched > best.matched) best = { matched, heardNorm };
+  }
+
+  if (best.matched > 0 && best.matched < targetChars.length) {
+    const missing = targetChars.filter(c => !best.heardNorm.includes(c));
+    setFeedback('#readFeedback', 'hint',
+      `🔁 我只聽到「${escapeHtml(best.heardNorm)}」，好像漏掉了「${escapeHtml(missing.join(''))}」。<br>請等「嘟」聲後，把整個詞語讀一次。`);
   } else {
     setFeedback('#readFeedback', 'error',
       '🔁 讀音不太對。請先按「播放詞語」再聽一次，然後重新錄音。');
@@ -645,14 +796,13 @@ async function doReadRecording() {
 }
 
 /* =========================================================
-   第二關：默 —— 學習階段
+   第二關：默
    ========================================================= */
 let strokeWriters = [];
 
 function renderLearnPhase() {
   const i = state.write.index;
   const word = state.words[i];
-
   $('#writeCount').textContent = `詞語 ${i + 1} / ${state.words.length}`;
 
   const disp = $('#learnWordDisplay');
@@ -661,7 +811,7 @@ function renderLearnPhase() {
     const el = document.createElement('div');
     el.className = 'char';
     el.textContent = ch;
-    el.addEventListener('click', () => speak(ch, 0.7));
+    el.addEventListener('click', () => { warmUpTTS(); speak(ch, 0.6); });
     disp.appendChild(el);
   });
 
@@ -674,9 +824,7 @@ function animateOne(writer) {
   return new Promise(resolve => {
     let done = false;
     const finish = () => { if (!done) { done = true; resolve(); } };
-    try {
-      writer.animateCharacter({ onComplete: finish });
-    } catch (e) { finish(); }
+    try { writer.animateCharacter({ onComplete: finish }); } catch (e) { finish(); }
     setTimeout(finish, 15000);
   });
 }
@@ -696,35 +844,20 @@ async function animateStrokes() {
   });
 
   const SZ = Math.min(160, getCanvasSize());
-
   for (const { box, ch } of boxes) {
     try {
       const w = HanziWriter.create(box, ch, {
-        width: SZ,
-        height: SZ,
-        padding: Math.round(SZ * 0.06),
-        showCharacter: true,
-        showOutline: true,
-        strokeColor: '#3d4f66',
-        outlineColor: '#e6ecf5',
-        radicalColor: '#5B8DEF',
+        width: SZ, height: SZ, padding: Math.round(SZ * 0.06),
+        showCharacter: true, showOutline: true,
+        strokeColor: '#3d4f66', outlineColor: '#e6ecf5', radicalColor: '#5B8DEF',
         charDataLoader: loadCharData
       });
       strokeWriters.push(w);
-    } catch (e) {
-      console.warn('HanziWriter 建立失敗：', ch, e);
-    }
+    } catch (e) { console.warn('HanziWriter 建立失敗：', ch, e); }
   }
-
-  for (const w of strokeWriters) {
-    await animateOne(w);
-    await sleep(220);
-  }
+  for (const w of strokeWriters) { await animateOne(w); await sleep(220); }
 }
 
-/* =========================================================
-   第二關：默 —— 默寫挑戰
-   ========================================================= */
 let quizData = null;
 
 function startQuiz() {
@@ -739,12 +872,10 @@ function startQuiz() {
 
   const grid = $('#quizGrid');
   grid.innerHTML = '';
-
   const SZ = getCanvasSize();
 
   quizData = {
-    chars,
-    writers: [],
+    chars, writers: [],
     mistakes: new Array(chars.length).fill(0),
     done: new Array(chars.length).fill(false),
     finished: false
@@ -765,28 +896,18 @@ function startQuiz() {
     label.className = 'quiz-label';
     label.textContent = `第 ${idx + 1} 字`;
     box.appendChild(label);
-
     grid.appendChild(box);
 
     let writer;
     try {
       writer = HanziWriter.create(canvas, ch, {
-        width: SZ,
-        height: SZ,
-        padding: Math.round(SZ * 0.06),
-        showCharacter: false,
-        showOutline: false,
-        strokeColor: '#2f6fed',
-        drawingColor: '#2f6fed',
-        highlightColor: '#FF8C42',
-        drawingWidth: Math.round(SZ * 0.11),
-        leniency: 1.2,
+        width: SZ, height: SZ, padding: Math.round(SZ * 0.06),
+        showCharacter: false, showOutline: false,
+        strokeColor: '#2f6fed', drawingColor: '#2f6fed', highlightColor: '#FF8C42',
+        drawingWidth: Math.round(SZ * 0.11), leniency: 1.2,
         charDataLoader: loadCharData
       });
-    } catch (e) {
-      console.warn('HanziWriter 建立失敗：', ch, e);
-      return;
-    }
+    } catch (e) { console.warn('HanziWriter 建立失敗：', ch, e); return; }
 
     quizData.writers.push(writer);
 
@@ -822,8 +943,7 @@ function checkQuizComplete() {
     renderQuizActions('next');
   } else {
     state.write.done[i] = false;
-    setFeedback('#quizFeedback', 'error',
-      `❌ 筆順有 ${totalMistakes} 處錯誤。請先重看筆順，再挑戰一次。`);
+    setFeedback('#quizFeedback', 'error', `❌ 筆順有 ${totalMistakes} 處錯誤。請先重看筆順，再挑戰一次。`);
     renderQuizActions('retry');
   }
 }
@@ -831,7 +951,6 @@ function checkQuizComplete() {
 function renderQuizActions(type) {
   const box = $('#quizActions');
   box.innerHTML = '';
-
   const isLast = state.write.index === state.words.length - 1;
 
   if (type === 'next') {
@@ -839,23 +958,15 @@ function renderQuizActions(type) {
     btn.className = 'btn-primary btn-lg';
     btn.textContent = isLast ? '📊 查看成績總結' : '下一個詞語 →';
     btn.addEventListener('click', () => {
-      if (isLast) {
-        buildReport();
-        showScreen('screen-report');
-      } else {
-        state.write.index++;
-        renderLearnPhase();
-      }
+      if (isLast) { buildReport(); showScreen('screen-report'); }
+      else { state.write.index++; renderLearnPhase(); }
     });
     box.appendChild(btn);
   } else {
     const btnReview = document.createElement('button');
     btnReview.className = 'btn-ghost';
     btnReview.textContent = '👀 重看筆順';
-    btnReview.addEventListener('click', () => {
-      renderLearnPhase();
-      setTimeout(animateStrokes, 250);
-    });
+    btnReview.addEventListener('click', () => { renderLearnPhase(); setTimeout(animateStrokes, 250); });
     box.appendChild(btnReview);
 
     const btnRetry = document.createElement('button');
@@ -878,14 +989,12 @@ function buildReport() {
     const wOK = state.write.done[i] === true;
     const attempts = state.write.attempts[i] || 0;
     const mistakes = state.write.mistakes[i] || 0;
-
     if (rOK) readOK++;
     if (wOK) { writeOK++; if (attempts <= 1) writeFirstTry++; }
 
     const readCell = rOK
       ? '<span class="ok">✅ 讀音準確</span>'
       : (state.read.skipped[i] ? '<span class="skip">⏭️ 已略過</span>' : '<span class="no">⬜ 未完成</span>');
-
     const writeCell = wOK
       ? `<span class="ok">✅ 寫得對${mistakes > 0 ? `（${mistakes} 次提示）` : ''}</span>`
       : '<span class="no">❌ 未完成</span>';
@@ -904,22 +1013,10 @@ function buildReport() {
   const avg      = Math.round((readPct + writePct) / 2);
 
   $('#reportSummary').innerHTML = `
-    <div class="stat">
-      <div class="stat-num">${readOK}/${n}</div>
-      <div class="stat-label">讀音準確</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">${writeOK}/${n}</div>
-      <div class="stat-label">默寫正確</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num">${writeFirstTry}/${n}</div>
-      <div class="stat-label">首次默對</div>
-    </div>
-    <div class="stat big">
-      <div class="stat-num">${avg}%</div>
-      <div class="stat-label">總平均</div>
-    </div>
+    <div class="stat"><div class="stat-num">${readOK}/${n}</div><div class="stat-label">讀音準確</div></div>
+    <div class="stat"><div class="stat-num">${writeOK}/${n}</div><div class="stat-label">默寫正確</div></div>
+    <div class="stat"><div class="stat-num">${writeFirstTry}/${n}</div><div class="stat-label">首次默對</div></div>
+    <div class="stat big"><div class="stat-num">${avg}%</div><div class="stat-label">總平均</div></div>
   `;
 
   let praise = '繼續努力，多讀多寫就會進步！';
@@ -930,12 +1027,100 @@ function buildReport() {
 }
 
 /* =========================================================
-   ★ 新增：環境檢測並在設定頁顯示提醒
+   詞庫管理
+   ========================================================= */
+function renderPresetList() {
+  const list = loadPresets();
+  const box = $('#presetList');
+  const noBox = $('#noPreset');
+  box.innerHTML = '';
+
+  if (!list.length) { noBox.style.display = 'block'; return; }
+  noBox.style.display = 'none';
+
+  list.forEach((p, idx) => {
+    const item = document.createElement('div');
+    item.className = 'preset-item';
+
+    const info = document.createElement('div');
+    info.className = 'preset-info';
+    info.innerHTML = `<div class="preset-name">${escapeHtml(p.name)}</div>
+                      <div class="preset-words">${escapeHtml(p.words.join('、'))}</div>`;
+    item.appendChild(info);
+
+    const actions = document.createElement('div');
+    actions.className = 'preset-actions';
+
+    const btnLoad = document.createElement('button');
+    btnLoad.className = 'btn-primary btn-sm';
+    btnLoad.textContent = '載入';
+    btnLoad.onclick = () => {
+      $('#wordInput').value = p.words.join('\n');
+      switchTab('input');
+    };
+    actions.appendChild(btnLoad);
+
+    const btnStart = document.createElement('button');
+    btnStart.className = 'btn-accent btn-sm';
+    btnStart.textContent = '直接開始';
+    btnStart.onclick = () => {
+      state.words = p.words.slice();
+      resetProgress();
+      saveLastWords(state.words);
+      showScreen('screen-read');
+      renderRead();
+      updateReadDoneBox();
+    };
+    actions.appendChild(btnStart);
+
+    const btnDel = document.createElement('button');
+    btnDel.className = 'btn-danger';
+    btnDel.textContent = '刪除';
+    btnDel.onclick = () => {
+      if (!confirm(`確定刪除詞庫「${p.name}」？`)) return;
+      const arr = loadPresets();
+      arr.splice(idx, 1);
+      savePresets(arr);
+      renderPresetList();
+    };
+    actions.appendChild(btnDel);
+
+    item.appendChild(actions);
+    box.appendChild(item);
+  });
+}
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === name);
+  });
+  $('#tab-input').style.display = name === 'input' ? 'block' : 'none';
+  $('#tab-presets').style.display = name === 'presets' ? 'block' : 'none';
+  if (name === 'presets') renderPresetList();
+}
+
+/* =========================================================
+   分享連結 / QR
+   ========================================================= */
+function buildShareLink() {
+  const words = parseWords($('#wordInput').value);
+  if (!words.length) { alert('請先輸入詞語。'); return null; }
+  return location.origin + location.pathname + '?words=' + encodeURIComponent(words.join(','));
+}
+function showShareBox() {
+  const url = buildShareLink();
+  if (!url) return;
+  $('#shareLink').value = url;
+  $('#shareBox').classList.add('show');
+  $('#qrBox').classList.remove('show');
+}
+
+/* =========================================================
+   環境檢測
    ========================================================= */
 async function detectEnvironment() {
   const box = $('#envWarnBox');
   box.innerHTML = '';
-
   const showWarn = html => {
     const div = document.createElement('div');
     div.className = 'env-warn';
@@ -946,34 +1131,100 @@ async function detectEnvironment() {
   const isSecure = location.protocol === 'https:'
                 || location.hostname === 'localhost'
                 || location.protocol === 'file:';
+  if (!isSecure) { showWarn('⚠️ 目前不是 HTTPS，麥克風可能無法使用。'); return; }
+  if (!SR) { showWarn('⚠️ 此瀏覽器不支援語音辨識，第一關將使用「手動自評」。建議改用 Chrome。'); return; }
 
-  if (!isSecure) {
-    showWarn('⚠️ 目前網址不是 HTTPS，也不是本機檔案，麥克風可能無法使用。<br>請改用 <b>https://</b> 或直接把 HTML 存成檔案開啟。');
-    return;
-  }
-
-  if (!SR) {
-    showWarn('⚠️ 此瀏覽器不支援語音辨識，第一關將使用「手動自評」。建議改用 Chrome。');
-    return;
-  }
-
-  // 嘗試取得麥克風權限
   const perm = await ensureMicPermission();
   if (!perm.ok) {
     let reason = '無法取得麥克風權限。';
-    if (perm.reason === 'denied') reason = '麥克風權限被拒絕（可能因為在 iframe 內，或瀏覽器已封鎖此網站）。';
+    if (perm.reason === 'denied') reason = '麥克風權限被拒絕。';
     else if (perm.reason === 'no-device') reason = '找不到麥克風裝置。';
-    else if (perm.reason === 'unsupported') reason = '此環境不支援麥克風（需 HTTPS 或 localhost）。';
+    else if (perm.reason === 'unsupported') reason = '此環境不支援麥克風。';
     showWarn(`🎙️ ${reason}<br>第一關將使用「手動自評」，學習流程不受影響。`);
   }
 }
 
 /* =========================================================
-   事件綁定與初始化
+   初始化
    ========================================================= */
 function init() {
-  /* --- 設定畫面 --- */
+  // 任何第一次點擊 → 暖機 TTS（避免第一次朗讀吃字）
+  const warmOnce = () => { warmUpTTS(); document.removeEventListener('click', warmOnce); };
+  document.addEventListener('click', warmOnce);
+
+  const urlWords = getWordsFromURL();
+  if (urlWords) {
+    state.words = urlWords;
+    resetProgress();
+    saveLastWords(state.words);
+    showScreen('screen-read');
+    renderRead();
+    updateReadDoneBox();
+    detectEnvironment();
+    return;
+  }
+
+  const last = loadLastWords();
+  if (last && last.length) $('#wordInput').value = last.join('\n');
+
+  document.querySelectorAll('.tab').forEach(t => {
+    t.addEventListener('click', () => switchTab(t.dataset.tab));
+  });
+
+  document.querySelectorAll('.chip').forEach(c => {
+    c.addEventListener('click', () => {
+      $('#wordInput').value = c.dataset.words.split(',').join('\n');
+      $('#setupError').style.display = 'none';
+    });
+  });
+
+  $('#btnSavePreset').addEventListener('click', () => {
+    const words = parseWords($('#wordInput').value);
+    const name = $('#presetName').value.trim();
+    if (!words.length) { alert('請先輸入詞語。'); return; }
+    if (!name) { alert('請輸入詞庫名稱。'); return; }
+    const list = loadPresets();
+    list.unshift({ name, words });
+    savePresets(list.slice(0, 50));
+    $('#presetName').value = '';
+    alert(`已儲存詞庫「${name}」。`);
+    renderPresetList();
+  });
+
+  $('#btnShare').addEventListener('click', showShareBox);
+
+  $('#btnCopyLink').addEventListener('click', async () => {
+    const txt = $('#shareLink').value;
+    try { await navigator.clipboard.writeText(txt); alert('已複製連結！'); }
+    catch (e) { $('#shareLink').select(); document.execCommand('copy'); alert('已複製連結！'); }
+  });
+
+  $('#btnShowQR').addEventListener('click', () => {
+    const url = buildShareLink();
+    if (!url) return;
+    $('#qrBox').classList.add('show');
+    $('#shareBox').classList.remove('show');
+
+    const render = () => {
+      const box = $('#qrCanvas');
+      box.innerHTML = '';
+      try {
+        new QRCode(box, { text: url, width: 200, height: 200,
+          colorDark: '#2f4f7f', colorLight: '#ffffff' });
+      } catch (e) { box.textContent = 'QR 產生失敗。'; }
+    };
+
+    if (typeof QRCode === 'undefined') {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js';
+      s.onload = render;
+      s.onerror = () => { $('#qrCanvas').textContent = 'QR 載入失敗。'; };
+      document.head.appendChild(s);
+    } else render();
+  });
+
   $('#btnStart').addEventListener('click', () => {
+    warmUpTTS();
     const words = parseWords($('#wordInput').value);
     const err = $('#setupError');
     if (!words.length) {
@@ -984,35 +1235,22 @@ function init() {
     err.style.display = 'none';
     state.words = words;
     resetProgress();
+    saveLastWords(state.words);
     showScreen('screen-read');
     renderRead();
     updateReadDoneBox();
   });
 
-  document.querySelectorAll('.chip').forEach(c => {
-    c.addEventListener('click', () => {
-      $('#wordInput').value = c.dataset.words.split(',').join('\n');
-      $('#setupError').style.display = 'none';
-    });
-  });
-
-  /* --- 第一關 --- */
   $('#btnReadRecord').addEventListener('click', doReadRecording);
-
-  $('#btnReadPlay').addEventListener('click', () => {
-    speak(state.words[state.read.index], 0.75);
-  });
-
+  $('#btnReadPlay').addEventListener('click', () => { warmUpTTS(); speak(state.words[state.read.index], 0.7); });
   $('#btnReadPrev').addEventListener('click', () => {
     state.read.index = (state.read.index - 1 + state.words.length) % state.words.length;
     renderRead();
   });
-
   $('#btnReadNext').addEventListener('click', () => {
     state.read.index = (state.read.index + 1) % state.words.length;
     renderRead();
   });
-
   $('#btnReadSkip').addEventListener('click', () => {
     const i = state.read.index;
     state.read.skipped[i] = true;
@@ -1025,44 +1263,33 @@ function init() {
       renderRead();
     }, 500);
   });
-
   $('#btnToWrite').addEventListener('click', () => {
     state.write.index = 0;
     showScreen('screen-write');
     renderLearnPhase();
   });
 
-  /* --- 第二關 --- */
-  $('#btnLearnPlay').addEventListener('click', () => {
-    speak(state.words[state.write.index], 0.75);
-  });
-
+  $('#btnLearnPlay').addEventListener('click', () => { warmUpTTS(); speak(state.words[state.write.index], 0.7); });
   $('#btnLearnStrokes').addEventListener('click', animateStrokes);
-
   $('#btnChallenge').addEventListener('click', () => {
     startQuiz();
-    speak(state.words[state.write.index], 0.75);
+    speak(state.words[state.write.index], 0.7);
   });
+  $('#btnQuizPlay').addEventListener('click', () => { warmUpTTS(); speak(state.words[state.write.index], 0.7); });
 
-  $('#btnQuizPlay').addEventListener('click', () => {
-    speak(state.words[state.write.index], 0.75);
-  });
-
-  /* --- 成績頁 --- */
   $('#btnRestart').addEventListener('click', () => {
     resetProgress();
     showScreen('screen-read');
     renderRead();
     updateReadDoneBox();
   });
-
   $('#btnNewWords').addEventListener('click', () => {
     resetProgress();
     state.words = [];
     showScreen('screen-setup');
+    renderPresetList();
   });
 
-  /* --- 環境檢測（顯示在設定頁上方）--- */
   detectEnvironment();
 }
 
