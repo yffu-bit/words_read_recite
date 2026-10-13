@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-HK">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -355,7 +355,7 @@ if ('speechSynthesis' in window) {
 
 function pickZhVoice() {
   const isZh = v => /^(zh|cmn)/i.test(v.lang || '');
-  return voices.find(v => isZh(v) && /TW|Hant|HK/i.test(v.lang))
+  return voices.find(v => isZh(v) && /HK/i.test(v.lang))
       || voices.find(v => isZh(v))
       || null;
 }
@@ -365,7 +365,7 @@ function speak(text, rate) {
     if (!('speechSynthesis' in window)) { resolve(); return; }
     try { speechSynthesis.cancel(); } catch (e) {}
     const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'zh-TW';
+    u.lang = 'zh-HK';
     u.rate = rate || 0.8;
     u.pitch = 1.05;
     const v = pickZhVoice();
@@ -395,7 +395,7 @@ function recognizeOnce(timeoutMs) {
     try { rec = new SR(); }
     catch (e) { finish({ ok: false, reason: 'unsupported' }); return; }
 
-    rec.lang = 'zh-TW';
+    rec.lang = 'zh-HK';
     rec.interimResults = false;
     rec.maxAlternatives = 5;
     rec.continuous = false;
